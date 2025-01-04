@@ -9,29 +9,70 @@ namespace CollageApp.Controllers
     {
         [HttpGet]
         [Route("All", Name = "GetAllStudents")]
-        public IEnumerable<Student> GetStudents()
+        public ActionResult<IEnumerable<Student>> GetStudents()
         {
-            return CollegeRepository.Students;
+            // OK - 200 - Success
+            return Ok(CollegeRepository.Students);
+
         }
 
         [HttpGet]
-        [Route("{id}", Name = "GetStudentById")]
-        public Student GetStudentById(int id)
+        [Route("{id:int}", Name = "GetStudentById")]
+        public ActionResult<Student> GetStudentById(int id)
         {
-            return CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault();
+            if (id <= 0)
+            {
+                // Bad request - 400 - Client side error
+                return BadRequest();
+            }
+
+            var student = CollegeRepository.Students.Where(x => x.Id == id).FirstOrDefault();
+            if (student == null)
+            {
+                // Not found - 404 - Client side error
+                return NotFound($"Student with id {id} Not Found");
+            }
+            // OK - 200 - Success
+            return Ok(student);
         }
 
-        [HttpGet("{name}", Name = "GetStudentByName")]
-        public Student GetStudentByName(string name)
+        [HttpGet("{name:alpha}", Name = "GetStudentByName")]
+        public ActionResult<Student> GetStudentByName(string name)
         {
-            return CollegeRepository.Students.Where(n => n.StudentName.Contains(name)).FirstOrDefault();
+            if (string.IsNullOrEmpty(name))
+            {
+                // Bad request - 400 - Client side error
+                return BadRequest();
+            }
+
+            var student = CollegeRepository.Students.Where(x => x.StudentName == name).FirstOrDefault();
+            if (student == null)
+            {
+                // Not found - 404 - Client side error
+                return NotFound($"Student with name {name} Not Found");
+            }
+            // OK - 200 - Success
+            return Ok(student);
         }
+
         [HttpDelete("{id}", Name = "DeleteStudentById")]
-        public bool DeleteStudent(int id)
+        public ActionResult<bool> DeleteStudent(int id)
         {
+            if (id <= 0)
+            {
+                // Bad request - 400 - Client side error
+                return BadRequest();
+            }
+
             var student = CollegeRepository.Students.Where(n => n.Id == id).FirstOrDefault();
+            if (student == null)
+            {
+                // Not found - 404 - Client side error
+                return NotFound($"Student with id {id} Not Found");
+            }
             CollegeRepository.Students.Remove(student);
-            return true;
+            // OK - 200 - Success
+            return Ok(true);
         }
     }
 }
