@@ -1,7 +1,7 @@
-﻿using CollageApp.Models;
+﻿using CollegeApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CollageApp.Controllers
+namespace CollegeApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
