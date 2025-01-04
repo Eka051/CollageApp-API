@@ -9,6 +9,9 @@ namespace CollageApp.Controllers
     {
         [HttpGet]
         [Route("All", Name = "GetAllStudents")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
         public ActionResult<IEnumerable<Student>> GetStudents()
         {
             // OK - 200 - Success
@@ -18,6 +21,11 @@ namespace CollageApp.Controllers
 
         [HttpGet]
         [Route("{id:int}", Name = "GetStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+       
         public ActionResult<Student> GetStudentById(int id)
         {
             if (id <= 0)
@@ -37,6 +45,11 @@ namespace CollageApp.Controllers
         }
 
         [HttpGet("{name:alpha}", Name = "GetStudentByName")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
         public ActionResult<Student> GetStudentByName(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -56,6 +69,11 @@ namespace CollageApp.Controllers
         }
 
         [HttpDelete("{id}", Name = "DeleteStudentById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
         public ActionResult<bool> DeleteStudent(int id)
         {
             if (id <= 0)
