@@ -138,8 +138,9 @@ namespace CollegeApp.Controllers
             CollegeRepository.Students.Add(student);
 
             model.Id = student.Id;
-
-            return Ok(student);
+            // Status - 201 - Success
+            // new student details
+            return CreatedAtRoute("GetStudentById", new { id = model.Id }, model);
         }
 
         [HttpDelete("{id}", Name = "DeleteStudentById")]
