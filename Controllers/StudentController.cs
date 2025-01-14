@@ -12,10 +12,37 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-        public ActionResult<IEnumerable<Student>> GetStudents()
+        public ActionResult<IEnumerable<StudentDTO>> GetStudents()
         {
+            var students = new List<StudentDTO>();
+            foreach (var item in CollegeRepository.Students)
+            {
+                //students.Add(new StudentDTO
+                //{
+                //    Id = item.Id,
+                //    StudentName = item.StudentName,
+                //    Email = item.Email,
+                //    Address = item.Address
+                //});
+                //StudentDTO std = new StudentDTO()
+                //{
+                //    Id = item.Id,
+                //    StudentName = item.StudentName,
+                //    Email = item.Email,
+                //    Address = item.Address
+                //};
+                //students.Add(std);
+
+                var student = CollegeRepository.Students.Select(s => new StudentDTO
+                {
+                    Id = s.Id,
+                    StudentName = s.StudentName,
+                    Email = s.Email,
+                    Address = s.Address
+                });
+            }
             // OK - 200 - Success
-            return Ok(CollegeRepository.Students);
+            return Ok(students);
 
         }
 
@@ -26,7 +53,7 @@ namespace CollegeApp.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
        
-        public ActionResult<Student> GetStudentById(int id)
+        public ActionResult<StudentDTO> GetStudentById(int id)
         {
             if (id <= 0)
             {
@@ -40,8 +67,17 @@ namespace CollegeApp.Controllers
                 // Not found - 404 - Client side error
                 return NotFound($"Student with id {id} Not Found");
             }
+
+            var studentDTO = new StudentDTO
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Email = student.Email,
+                Address = student.Address
+            };
+
             // OK - 200 - Success
-            return Ok(student);
+            return Ok(studentDTO);
         }
 
         [HttpGet("{name:alpha}", Name = "GetStudentByName")]
@@ -64,8 +100,16 @@ namespace CollegeApp.Controllers
                 // Not found - 404 - Client side error
                 return NotFound($"Student with name {name} Not Found");
             }
+
+            var studentDTO = new StudentDTO
+            {
+                Id = student.Id,
+                StudentName = student.StudentName,
+                Email = student.Email,
+                Address = student.Address
+            };
             // OK - 200 - Success
-            return Ok(student);
+            return Ok(studentDTO);
         }
 
         [HttpDelete("{id}", Name = "DeleteStudentById")]
