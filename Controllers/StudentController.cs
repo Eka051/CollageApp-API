@@ -120,6 +120,7 @@ namespace CollegeApp.Controllers
 
         public ActionResult<StudentDTO> CreateStudent([FromBody]StudentDTO model)
         {
+
             if (model == null)
             {
                // Bad request - 400 - Client side error
