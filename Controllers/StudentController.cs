@@ -14,35 +14,34 @@ namespace CollegeApp.Controllers
 
         public ActionResult<IEnumerable<StudentDTO>> GetStudents()
         {
-            var students = new List<StudentDTO>();
-            foreach (var item in CollegeRepository.Students)
+            //var students = new List<StudentDTO>();
+            //foreach (var item in CollegeRepository.Students)
+            //{
+            //    students.Add(new StudentDTO
+            //    {
+            //        Id = item.Id,
+            //        StudentName = item.StudentName,
+            //        Email = item.Email,
+            //        Address = item.Address
+            //    });
+            //    StudentDTO std = new StudentDTO()
+            //    {
+            //        Id = item.Id,
+            //        StudentName = item.StudentName,
+            //        Email = item.Email,
+            //        Address = item.Address
+            //    };
+            //    students.Add(std);
+            //}
+            var student = CollegeRepository.Students.Select(s => new StudentDTO
             {
-                //students.Add(new StudentDTO
-                //{
-                //    Id = item.Id,
-                //    StudentName = item.StudentName,
-                //    Email = item.Email,
-                //    Address = item.Address
-                //});
-                //StudentDTO std = new StudentDTO()
-                //{
-                //    Id = item.Id,
-                //    StudentName = item.StudentName,
-                //    Email = item.Email,
-                //    Address = item.Address
-                //};
-                //students.Add(std);
-
-                var student = CollegeRepository.Students.Select(s => new StudentDTO
-                {
-                    Id = s.Id,
-                    StudentName = s.StudentName,
-                    Email = s.Email,
-                    Address = s.Address
-                });
-            }
+                Id = s.Id,
+                StudentName = s.StudentName,
+                Email = s.Email,
+                Address = s.Address
+            });
             // OK - 200 - Success
-            return Ok(students);
+            return Ok(student);
 
         }
 
@@ -110,6 +109,37 @@ namespace CollegeApp.Controllers
             };
             // OK - 200 - Success
             return Ok(studentDTO);
+        }
+
+        [HttpPost]
+        [Route("Create")] // api/Student/Create
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        public ActionResult<StudentDTO> CreateStudent([FromBody]StudentDTO model)
+        {
+            if (model == null)
+            {
+               // Bad request - 400 - Client side error
+                return BadRequest();
+            }
+
+            int newId = CollegeRepository.Students.LastOrDefault().Id + 1;
+
+            Student student = new Student
+            {
+                Id = newId,
+                StudentName = model.StudentName,
+                Email = model.Email,
+                Address = model.Address
+            };
+            CollegeRepository.Students.Add(student);
+
+            model.Id = student.Id;
+
+            return Ok(student);
         }
 
         [HttpDelete("{id}", Name = "DeleteStudentById")]
