@@ -29,5 +29,7 @@ namespace CollegeApp.Models
         [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; }
 
+        public DateTime AdmissionDate { get; set; }
+
     }
 }
